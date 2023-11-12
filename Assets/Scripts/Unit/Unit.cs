@@ -6,7 +6,11 @@ public class Unit : MonoBehaviour
 
     private UnitsBase _unitBase;
 
-   [SerializeField] private Transform _target;
+    private Transform _target;
+
+    private bool _isBuilder = false;
+
+    private bool _isReadyBuild = false;
 
     private void Awake()
     {
@@ -25,14 +29,23 @@ public class Unit : MonoBehaviour
         {
             _unitBase.AddFreeUnit(this);
         }
+
+        if (_target == null && _isBuilder == true)
+        {
+            _isReadyBuild = true;
+        }
     }
 
-    public void TakeTargetCoin(Coin coin)
+    public void TakeTarget(Transform target)
     {
-        if(coin != null)
+        if (target != null && target.TryGetComponent<Coin>(out Coin coin))
         {
-            _target = coin.transform;
+            _target = target;
             _coinsBase.Delete(coin);
+        }
+        else if (target != null)
+        {
+            _target = target;
         }
         else
         {
@@ -48,5 +61,15 @@ public class Unit : MonoBehaviour
     public void BroughtCoin(int amountBroughtCoins)
     {
         _coinsBase.AddAvailableMoney(amountBroughtCoins);
+    }
+
+    public bool isReadyBuild()
+    {
+        return _isReadyBuild;
+    }
+
+    public void ChangeStatusUnit(bool currentStatus)
+    {
+        _isBuilder = currentStatus;
     }
 }

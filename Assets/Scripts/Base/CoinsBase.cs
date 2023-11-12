@@ -42,4 +42,14 @@ public class CoinsBase : MonoBehaviour
     {
         _availableMoney += amountBroughtMoney;
     }
+
+    public void DeleteAvailableMoney(int amountSpentMoney)
+    {
+        _availableMoney -= amountSpentMoney;
+    }
+
+    public int ShowAvailableMoney()
+    {
+        return _availableMoney;
+    }
 }

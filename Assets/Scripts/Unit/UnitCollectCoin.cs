@@ -31,15 +31,23 @@ public class UnitCollectCoin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Coin>() && other.transform.position == _currentTarget.position)
+        if (_currentTarget == null)
+        {
+
+        }
+        else if (other.GetComponent<Coin>() && other.transform.position == _currentTarget.position)
         {
             _currentCollectionCoin = Instantiate(_collectCoin, this.transform.position, Quaternion.Euler(0, 0, 90));
             _currentCollectionCoin.transform.SetParent(this.transform);
-            _currentCollectionCoin.transform.position += new Vector3(0, 5, 0);
+            _currentCollectionCoin.transform.position += new Vector3(0, 9, 0);
 
             Destroy(_currentTarget.gameObject);
 
-            _unit.TakeTargetCoin(null);
+            _unit.TakeTarget(null);
+        }
+        else if (_currentTarget != null && other.transform.position == _currentTarget.position)
+        {
+            _unit.TakeTarget(null);
         }
     }
 
@@ -49,7 +57,7 @@ public class UnitCollectCoin : MonoBehaviour
         {
             Destroy(_currentCollectionCoin.gameObject);
 
-            _unit.TakeTargetCoin(null);
+            _unit.TakeTarget(null);
 
             _unit.BroughtCoin(_amountCoinsInStack);
         }

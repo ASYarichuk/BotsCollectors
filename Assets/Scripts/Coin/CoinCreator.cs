@@ -5,14 +5,17 @@ public class CoinCreator : MonoBehaviour
 {
     [SerializeField] private Coin _coinPrefab;
 
-    private int _mapSizeMinX = -64;
-    private int _mapSizeMaxX = 107;
-    private int _mapSizeMinZ = -10;
-    private int _mapSizeMaxZ = 55;
+    [SerializeField] private int _amountCoins = 10;
+
+    [SerializeField] private PositionChecker _positionChecker;
+
+    [SerializeField] private MapSize _mapSize;
+
     private int _positionCoinY = 2;
-    private int _amountCoins = 10;
 
     private float _waitUntilCreate = 3f;
+
+    private Vector3 positionCreatedCoin = new Vector3(4, 1, 4);
 
     private void Start()
     {
@@ -25,7 +28,16 @@ public class CoinCreator : MonoBehaviour
 
         while (_amountCoins > 0)
         {
-            Instantiate(_coinPrefab, new Vector3(Random.Range(_mapSizeMinX, _mapSizeMaxX), _positionCoinY, Random.Range(_mapSizeMinZ, _mapSizeMaxZ)), Quaternion.Euler(0, 0, 90));
+            ChangePositionCreatedCoin();
+            bool checkCurrentPositionCreatedCoin = _positionChecker.CheckPosition();
+
+            while (checkCurrentPositionCreatedCoin == false)
+            {
+                ChangePositionCreatedCoin();
+                checkCurrentPositionCreatedCoin = _positionChecker.CheckPosition();
+            }
+
+            Instantiate(_coinPrefab, positionCreatedCoin, Quaternion.Euler(0, 0, 90));
 
             _amountCoins--;
 
@@ -33,8 +45,12 @@ public class CoinCreator : MonoBehaviour
         }
     }
 
-    public void MoveCoin()
+    private void ChangePositionCreatedCoin()
     {
-        transform.position = new Vector3(Random.Range(_mapSizeMinX, _mapSizeMaxX), _positionCoinY, Random.Range(_mapSizeMinZ, _mapSizeMaxZ));
+        positionCreatedCoin = new(Random.Range(_mapSize.GiveMapSizeMinX(), _mapSize.GiveMapSizeMaxX()),
+                                _positionCoinY,
+                                Random.Range(_mapSize.GiveMapSizeMinZ(), _mapSize.GiveMapSizeMaxZ()));
+
+        _positionChecker.ChangePosition(positionCreatedCoin);
     }
 }

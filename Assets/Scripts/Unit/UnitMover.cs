@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UnitMover : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    [SerializeField] private float _speed = 15f;
     [SerializeField] private float _speedRotation;
 
     private Transform _currentTarget;
@@ -25,7 +25,7 @@ public class UnitMover : MonoBehaviour
 
         if (_currentTarget != null)
         {
-            MoveToMoney(_currentTarget);
+            MoveTo(_currentTarget);
         }
         else
         {
@@ -33,17 +33,17 @@ public class UnitMover : MonoBehaviour
         }
     }
 
-    private void MoveToMoney(Transform target)
+    private void MoveTo(Transform target)
     {
         transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(target.position.x, transform.position.y, target.position.z),
-            _speed * Time.deltaTime);
+                    new Vector3(target.position.x, transform.position.y, target.position.z),
+                    _speed * Time.deltaTime);
 
-        Vector3 direction = new Vector3(target.position.x - transform.position.x,
+        Vector3 directionRotete = new Vector3(target.position.x - transform.position.x,
                                         transform.position.y,
                                         target.position.z - transform.position.z);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * _speedRotation);
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(directionRotete), Time.deltaTime * _speedRotation);
 
         _animator.SetBool(_nameAnimationWalk, true);
     }
